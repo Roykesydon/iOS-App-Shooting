@@ -46,7 +46,7 @@ struct Arrow: Identifiable{
     var degree: Double = -45
     var moveFlag: Bool = false
     var accY: Double = 3000
-    var accX: Double = -200
+    var accX: Double = 0
     var shoot: Bool = false
     
     func checkGroundCollision(ground: Double) -> Bool{
@@ -80,8 +80,13 @@ struct Arrow: Identifiable{
         self.speedY += accY * time
         self.speedX += accX * time
         
-        self.speedX = max(0, speedX)
-        self.degree = atan(speedY / speedX) * 180 / Double.pi
+//        self.speedX = max(0, speedX)
+        if speedX >= 0{
+            self.degree = atan(speedY / speedX) * 180 / Double.pi
+        }
+        else{
+            self.degree = atan(speedY / speedX) * 180 / Double.pi + 180
+        }
     }
 }
 
@@ -105,7 +110,7 @@ struct ArrowView: View {
 //            Circle()
 //                .frame(width: 3, height: 3)
 //                .foregroundColor(.red)
-//                .offset(x: 25, y: 0)
+//                .offset(x: 0, y: 0)
         }
         .compositingGroup()
         .rotationEffect(.degrees(arrow.degree))

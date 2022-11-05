@@ -8,13 +8,18 @@
 import SwiftUI
 
 struct GamingView: View {
-//    @State var arrow = Arrow(offsetX: -200, offsetY: 100)
+    //    @State var arrow = Arrow(offsetX: -200, offsetY: 100)
     @State var arrows: [Arrow] = [Arrow(offsetX: -250, offsetY: 100)]
     @State var pull: Bool = true
     @State private var timer: Timer?
     @State var shootDegree: Double = -45
     @State var shootSpeed: Double = 1150
     @State var lasttimeGetArrow = 0
+    @State var level = 0
+    
+    //    @State var enemy = Enemy(offsetX: 50, offsetY: 130)
+    @State var enemys: [Enemy] = []
+    @State var enemyDeadCount = 210
     
     var body: some View {
         GeometryReader(content: {
@@ -30,6 +35,11 @@ struct GamingView: View {
                         
                         BowView(pull: $pull, degree: $shootDegree)
                             .offset(x: -250, y: 100)
+                        ForEach($enemys){
+                            $enemy in
+                            EnemyView(enemy: $enemy)
+                                .offset(x: enemy.offsetX, y: enemy.offsetY)
+                        }
                     }
                     .frame(width: geometry.size.width*0.8, height: geometry.size.height*0.9)
                     .background(Color(red: 10/255, green: 10/255, blue: 10/255))
@@ -84,6 +94,43 @@ struct GamingView: View {
                 
                 
                 func update(){
+                    // 怪物出現機制
+                    var enemy_all_dead = true
+                    for i in 0..<enemys.count{
+                        if !enemys[i].isDead{
+                            enemy_all_dead = false
+                        }
+                    }
+                    
+                    if enemy_all_dead{
+                        enemyDeadCount += 1
+                        if enemyDeadCount >= 210{
+                            enemyDeadCount = 0
+                            level += 1
+                            
+                            var enemyCountInLevel = [1, 2, 2, 3, 3]
+                            var pastPosition: [Double] = []
+                            for _ in 0..<enemyCountInLevel[level-1]{
+                                while true{
+                                    var position = 50 + Double.random(in: -100...200)
+                                    var flag = true
+                                    
+                                    for j in 0..<pastPosition.count{
+                                        if abs(pastPosition[j] - position) < 70{
+                                            flag = false
+                                        }
+                                    }
+                                    if flag{
+                                        pastPosition.append(position)
+                                        enemys.append(Enemy(offsetX: position, offsetY: 130))
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // 檢查 arrow 和 bow, ground 互動
                     if !arrows.last!.shoot{
                         arrows[arrows.endIndex-1].degree = shootDegree
                         arrows[arrows.endIndex-1].initSpeed = shootSpeed
@@ -99,6 +146,35 @@ struct GamingView: View {
                                 pull = true
                                 arrows.append(Arrow(offsetX: -250, offsetY: 100))
                                 lasttimeGetArrow = 0
+                            }
+                        }
+                    }
+                    
+                    // 檢查 arrow 和 enemy 互動
+                    if enemys.count != 0 {
+                        for index in 0..<enemys.count {
+                            let targetX = 25 * cos(arrows[arrows.endIndex-1].degree * Double.pi / 180) + arrows[arrows.endIndex-1].offsetX
+                            let targetY = 25 * sin(arrows[arrows.endIndex-1].degree * Double.pi / 180) + arrows[arrows.endIndex-1].offsetY
+                            let myX = enemys[index].offsetX
+                            let myY = enemys[index].offsetY
+                            
+                            if enemys[index].beingHitted(targetX: targetX, targetY: targetY, myX: myX, myY: myY){
+                                enemys[index].suicide()
+                                
+                                if targetX < myX && targetY <= myY{
+                                    arrows[arrows.endIndex-1].speedY = -300 + Double.random(in: 0...200)
+                                    arrows[arrows.endIndex-1].speedX = -600 + Double.random(in: 0...200)
+                                }
+                                else if targetX >= myX && targetY <= myY{
+                                    arrows[arrows.endIndex-1].speedY = -300 + Double.random(in: 0...200)
+                                    arrows[arrows.endIndex-1].speedX = 600 + Double.random(in: -200...0)
+                                }
+                                else if targetX < myX && targetY > myY{
+                                    arrows[arrows.endIndex-1].speedX = -600 + Double.random(in: 0...200)
+                                }
+                                else if targetX >= myX && targetY > myY{
+                                    arrows[arrows.endIndex-1].speedX = 600 + Double.random(in: -200...0)
+                                }
                             }
                         }
                     }
