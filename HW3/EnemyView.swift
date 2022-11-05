@@ -38,36 +38,36 @@ struct EnemyView: View {
             
             ZStack{
                 if !enemy.isDead{
-                    Rectangle()
+                    RoundedRectangle(cornerRadius: 5)
                         .frame(width: 3, height: 17)
                         .foregroundColor(Color("MyPink"))
                         .offset(x: -10, y: -5)
-                    Rectangle()
+                    RoundedRectangle(cornerRadius: 5)
                         .frame(width: 3, height: 17)
                         .foregroundColor(Color("MyPink"))
                         .offset(x: 5, y: -5)
                 }
                 else if enemy.isDead{
-                    Rectangle()
+                    RoundedRectangle(cornerRadius: 5)
                         .frame(width: 3, height: 17)
                         .foregroundColor(Color("MyPink"))
                         .rotationEffect(.degrees(45), anchor: .center)
                         .offset(x: -10, y: -5)
                     
-                    Rectangle()
+                    RoundedRectangle(cornerRadius: 5)
                         .frame(width: 3, height: 17)
                         .foregroundColor(Color("MyPink"))
                         .rotationEffect(.degrees(-45), anchor: .center)
                         .offset(x: -10, y: -5)
                     
                     
-                    Rectangle()
+                    RoundedRectangle(cornerRadius: 5)
                         .frame(width: 3, height: 17)
                         .foregroundColor(Color("MyPink"))
                         .rotationEffect(.degrees(45), anchor: .center)
                         .offset(x: 5, y: -5)
                     
-                    Rectangle()
+                    RoundedRectangle(cornerRadius: 5)
                         .frame(width: 3, height: 17)
                         .foregroundColor(Color("MyPink"))
                         .rotationEffect(.degrees(-45), anchor: .center)
@@ -114,6 +114,7 @@ struct EnemyView: View {
             }
         }
         .onDisappear(){
+            print("delete enemy")
             self.timer?.invalidate()
         }
     }

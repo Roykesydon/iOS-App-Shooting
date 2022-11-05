@@ -24,7 +24,7 @@ struct AimingString: Shape {
 }
 
 struct BowView: View {
-    @Binding var pull: Bool 
+    @Binding var pull: Bool
     @Binding var degree: Double
     @Namespace private var bowStringSpace
     

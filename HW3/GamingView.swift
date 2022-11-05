@@ -16,10 +16,15 @@ struct GamingView: View {
     @State var shootSpeed: Double = 1150
     @State var lasttimeGetArrow = 0
     @State var level = 0
+    @State var shootCount: Int = 0
     
     //    @State var enemy = Enemy(offsetX: 50, offsetY: 130)
     @State var enemys: [Enemy] = []
     @State var enemyDeadCount = 210
+    
+    @State var startTime: Int = 0
+    @State var endTime: Int = 0
+    @State var curTimeString: String = "00:00:00"
     
     var body: some View {
         GeometryReader(content: {
@@ -27,6 +32,33 @@ struct GamingView: View {
             HStack(spacing: 0){
                 VStack(spacing: 0){
                     ZStack{
+                        VStack{
+                            HStack{
+                                Text("第 \(level) 波")
+                                    .font(.largeTitle)
+                                    .fontWeight(.light)
+                                    .foregroundColor(.white)
+                                
+                                Spacer()
+                                
+                                Text("射 \(shootCount) 支箭")
+                                    .font(.largeTitle)
+                                    .fontWeight(.light)
+                                    .foregroundColor(.white)
+                                
+                                Spacer()
+                                
+                                Text(curTimeString)
+                                    .font(.largeTitle)
+                                    .fontWeight(.light)
+                                    .foregroundColor(.white)
+                                    .frame(width: 150)
+                            }
+                            .padding(30)
+                            Spacer()
+                            
+                        }
+                            
                         ForEach($arrows){
                             $arrow in
                             ArrowView(arrow: $arrow)
@@ -67,6 +99,7 @@ struct GamingView: View {
                     
                     
                     Button {
+                        shootCount += 1
                         arrows[arrows.endIndex-1].degree = shootDegree
                         arrows[arrows.endIndex-1].shoot = true
                         pull = false
@@ -88,6 +121,8 @@ struct GamingView: View {
                 .background(Color(red: 30/255, green: 30/255, blue: 30/255))
             }
             .onAppear(){
+                startTime = Int(NSDate().timeIntervalSince1970 * 100);
+                
                 self.timer = Timer.scheduledTimer(withTimeInterval: 1/140, repeats: true, block: { _ in
                     update()
                 })
@@ -95,6 +130,11 @@ struct GamingView: View {
                 
                 func update(){
                     // 怪物出現機制
+                    endTime = Int(NSDate().timeIntervalSince1970 * 100)
+                    var timeDiff: Int = Int(endTime - startTime)
+                    curTimeString = "\(String(format: "%02d", timeDiff/6000)):\(String(format: "%02d", timeDiff/100%60))"
+//                    curTimeString = String(timeDiff)
+                    
                     var enemy_all_dead = true
                     for i in 0..<enemys.count{
                         if !enemys[i].isDead{
@@ -106,13 +146,19 @@ struct GamingView: View {
                         enemyDeadCount += 1
                         if enemyDeadCount >= 210{
                             enemyDeadCount = 0
+                            enemys = []
                             level += 1
                             
-                            var enemyCountInLevel = [1, 2, 2, 3, 3]
+                            let enemyCountInLevel = [1, 2, 2, 3, 3]
                             var pastPosition: [Double] = []
+                            
+                            if level >= 6{
+                                level = 5
+                            }
+                            
                             for _ in 0..<enemyCountInLevel[level-1]{
                                 while true{
-                                    var position = 50 + Double.random(in: -100...200)
+                                    let position = 50 + Double.random(in: -100...200)
                                     var flag = true
                                     
                                     for j in 0..<pastPosition.count{
@@ -146,6 +192,9 @@ struct GamingView: View {
                                 pull = true
                                 arrows.append(Arrow(offsetX: -250, offsetY: 100))
                                 lasttimeGetArrow = 0
+                                if arrows.count > 20{
+                                    arrows.removeFirst()
+                                }
                             }
                         }
                     }
