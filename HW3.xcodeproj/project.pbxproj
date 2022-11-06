@@ -15,6 +15,8 @@
 		709D79DE291500CF0009545C /* ArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79DD291500CF0009545C /* ArrowView.swift */; };
 		709D79E02916537D0009545C /* BowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79DF2916537D0009545C /* BowView.swift */; };
 		709D79E22916812A0009545C /* EnemyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79E12916812A0009545C /* EnemyView.swift */; };
+		709D79E4291787DF0009545C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79E3291787DF0009545C /* HomeView.swift */; };
+		709D79E6291795740009545C /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79E5291795740009545C /* SettingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +29,8 @@
 		709D79DD291500CF0009545C /* ArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowView.swift; sourceTree = "<group>"; };
 		709D79DF2916537D0009545C /* BowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowView.swift; sourceTree = "<group>"; };
 		709D79E12916812A0009545C /* EnemyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyView.swift; sourceTree = "<group>"; };
+		709D79E3291787DF0009545C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		709D79E5291795740009545C /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,8 +64,10 @@
 			isa = PBXGroup;
 			children = (
 				709D79C82914FA210009545C /* HW3App.swift */,
+				709D79E3291787DF0009545C /* HomeView.swift */,
 				709D79CA2914FA210009545C /* ContentView.swift */,
 				709D79D62914FCF10009545C /* GamingView.swift */,
+				709D79E5291795740009545C /* SettingView.swift */,
 				709D79E12916812A0009545C /* EnemyView.swift */,
 				709D79DF2916537D0009545C /* BowView.swift */,
 				709D79DD291500CF0009545C /* ArrowView.swift */,
@@ -150,9 +156,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				709D79DE291500CF0009545C /* ArrowView.swift in Sources */,
+				709D79E4291787DF0009545C /* HomeView.swift in Sources */,
 				709D79CB2914FA210009545C /* ContentView.swift in Sources */,
 				709D79D72914FCF10009545C /* GamingView.swift in Sources */,
 				709D79E02916537D0009545C /* BowView.swift in Sources */,
+				709D79E6291795740009545C /* SettingView.swift in Sources */,
 				709D79C92914FA210009545C /* HW3App.swift in Sources */,
 				709D79E22916812A0009545C /* EnemyView.swift in Sources */,
 			);

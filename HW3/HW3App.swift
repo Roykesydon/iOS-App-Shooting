@@ -12,7 +12,7 @@ struct HW3App: App {
     var body: some Scene {
         WindowGroup {
 //            ContentView()
-            GamingView()
+            ContentView()
         }
     }
 }

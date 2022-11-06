@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var page: String = "HomeView"
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        if page == "HomeView"{
+            HomeView(page: $page)
         }
-        .padding()
+        else if page == "GamingView"{
+            GamingView(page: $page)
+        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .previewInterfaceOrientation(.landscapeRight)
     }
 }

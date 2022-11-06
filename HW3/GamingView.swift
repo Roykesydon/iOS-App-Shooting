@@ -8,7 +8,17 @@
 import SwiftUI
 
 struct GamingView: View {
-    //    @State var arrow = Arrow(offsetX: -200, offsetY: 100)
+    // 暫停
+    @State var pausing = false
+    @State var pausingTime: Int = 0
+    @State var lastTime: Int = 0
+    
+    // 分頁
+    @Binding var page: String
+    @State var quitAlert: Bool = false
+    @State var showSetting: Bool = false
+    
+    // 射箭
     @State var arrows: [Arrow] = [Arrow(offsetX: -250, offsetY: 100)]
     @State var pull: Bool = true
     @State private var timer: Timer?
@@ -18,10 +28,11 @@ struct GamingView: View {
     @State var level = 0
     @State var shootCount: Int = 0
     
-    //    @State var enemy = Enemy(offsetX: 50, offsetY: 130)
+    // 敵人
     @State var enemys: [Enemy] = []
     @State var enemyDeadCount = 210
     
+    // 計時
     @State var startTime: Int = 0
     @State var endTime: Int = 0
     @State var curTimeString: String = "00:00:00"
@@ -30,71 +41,170 @@ struct GamingView: View {
         GeometryReader(content: {
             geometry in
             HStack(spacing: 0){
-                VStack(spacing: 0){
-                    ZStack{
-                        VStack{
-                            HStack{
-                                Text("第 \(level) 波")
-                                    .font(.largeTitle)
-                                    .fontWeight(.light)
-                                    .foregroundColor(.white)
-                                
+                ZStack {
+                    VStack(spacing: 0){
+                        ZStack{
+                            VStack{
+                                HStack{
+                                    Text("第 \(level) 波")
+                                        .font(.largeTitle)
+                                        .fontWeight(.light)
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer()
+                                    
+                                    Text("射 \(shootCount) 支箭")
+                                        .font(.largeTitle)
+                                        .fontWeight(.light)
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer()
+                                    
+                                    Text(curTimeString)
+                                        .font(.largeTitle)
+                                        .fontWeight(.light)
+                                        .foregroundColor(.white)
+                                        .frame(width: 150)
+                                }
+                                .padding(30)
                                 Spacer()
                                 
-                                Text("射 \(shootCount) 支箭")
-                                    .font(.largeTitle)
-                                    .fontWeight(.light)
-                                    .foregroundColor(.white)
-                                
-                                Spacer()
-                                
-                                Text(curTimeString)
-                                    .font(.largeTitle)
-                                    .fontWeight(.light)
-                                    .foregroundColor(.white)
-                                    .frame(width: 150)
                             }
-                            .padding(30)
-                            Spacer()
+                                
+                            ForEach($arrows){
+                                $arrow in
+                                ArrowView(arrow: $arrow)
+                                    .offset(x: arrow.offsetX, y: arrow.offsetY)
+                            }
                             
+                            BowView(pull: $pull, degree: $shootDegree)
+                                .offset(x: -250, y: 100)
+                            ForEach($enemys){
+                                $enemy in
+                                EnemyView(enemy: $enemy, pausing: $pausing)
+                                    .offset(x: enemy.offsetX, y: enemy.offsetY)
+                            }
                         }
-                            
-                        ForEach($arrows){
-                            $arrow in
-                            ArrowView(arrow: $arrow)
-                                .offset(x: arrow.offsetX, y: arrow.offsetY)
-                        }
+                        .frame(width: geometry.size.width*0.8, height: geometry.size.height*0.9)
+                        .background(Color(red: 10/255, green: 10/255, blue: 10/255))
                         
-                        BowView(pull: $pull, degree: $shootDegree)
-                            .offset(x: -250, y: 100)
-                        ForEach($enemys){
-                            $enemy in
-                            EnemyView(enemy: $enemy)
-                                .offset(x: enemy.offsetX, y: enemy.offsetY)
-                        }
+                        VStack{}
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .background(.white)
                     }
-                    .frame(width: geometry.size.width*0.8, height: geometry.size.height*0.9)
-                    .background(Color(red: 10/255, green: 10/255, blue: 10/255))
                     
-                    VStack{}
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(.white)
+                    Image(systemName: "pause.fill")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.white)
+                        .opacity((pausing) ? 1.0 : 0.0)
                 }
+                // 右邊面板
                 VStack(alignment: .center){
+                    if !pausing{
+                        Button {
+                            pausing = true
+                        } label: {
+                            HStack{
+                                Text("暫停")
+                                    .foregroundColor(.white)
+                                Image(systemName: "pause.fill")
+                                    .foregroundColor(.white)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(.purple, lineWidth: 2)
+                            )
+                        }
+                        .padding(EdgeInsets(top: 20, leading: 10, bottom: 0, trailing: 10))
+                    }
+                    else{
+                        Button {
+                            pausing = false
+                        } label: {
+                            HStack{
+                                Text("繼續")
+                                    .foregroundColor(.white)
+                                Image(systemName: "play.fill")
+                                    .foregroundColor(.white)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(.purple, lineWidth: 2)
+                            )
+                        }
+                        .padding(EdgeInsets(top: 20, leading: 10, bottom: 0, trailing: 10))
+                    }
+                    
+                    Button {
+                        showSetting = true
+                    } label: {
+                        HStack{
+                            Text("設定")
+                                .foregroundColor(.white)
+                            Image(systemName: "gearshape")
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(.purple, lineWidth: 2)
+                        )
+                    }
+                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
+                    .sheet(isPresented: $showSetting) {
+                        SettingView()
+                    }
+                    
+                    Button {
+                        quitAlert = true
+                    } label: {
+                        HStack{
+                            Text("離開")
+                                .foregroundColor(.white)
+                            Image(systemName: "door.left.hand.open")
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(.purple, lineWidth: 2)
+                        )
+                    }
+                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
+                    .alert("確定要離開嗎", isPresented: $quitAlert, actions: {
+                       Button("取消", role: .cancel) {
+                       }
+                       Button("離開", role: .destructive) {
+                           page = "HomeView"
+                       }
+                    }, message: {
+//                        Text("真心不騙")
+                    })
+                    
                     Spacer()
                     
                     HStack{
                         Text("力度")
                             .foregroundColor(.white)
                         Slider(value: $shootSpeed, in: 300...1150)
-                            .accentColor(.purple)
+                            .accentColor((pausing) ? .gray : .purple)
+                            .disabled(pausing)
                     }
                     
                     HStack{
                         Text("角度")
                             .foregroundColor(.white)
                         Slider(value: $shootDegree, in: -90...0)
-                            .accentColor(.purple)
+                            .accentColor((pausing) ? .gray : .purple)
+                            .disabled(pausing)
                     }
                     
                     
@@ -109,7 +219,7 @@ struct GamingView: View {
                             .foregroundColor(pull ? .white : .gray)
                             .padding(8)
                             .overlay(
-                                Rectangle()
+                                RoundedRectangle(cornerRadius: 10)
                                     .stroke(pull ? .purple : .gray, lineWidth: 2)
                             )
                             .padding(10)
@@ -129,12 +239,19 @@ struct GamingView: View {
                 
                 
                 func update(){
-                    // 怪物出現機制
-                    endTime = Int(NSDate().timeIntervalSince1970 * 100)
-                    var timeDiff: Int = Int(endTime - startTime)
-                    curTimeString = "\(String(format: "%02d", timeDiff/6000)):\(String(format: "%02d", timeDiff/100%60))"
-//                    curTimeString = String(timeDiff)
+                    if pausing{
+                        pausingTime += Int(NSDate().timeIntervalSince1970 * 100) - lastTime
+                        lastTime = Int(NSDate().timeIntervalSince1970 * 100)
+                        return
+                    }
                     
+                    // 計時機制
+                    endTime = Int(NSDate().timeIntervalSince1970 * 100)
+                    let timeDiff: Int = Int(endTime - startTime) - pausingTime
+                    curTimeString = "\(String(format: "%02d", timeDiff/6000)):\(String(format: "%02d", timeDiff/100%60))"
+                    lastTime = endTime
+                    
+                    // 怪物出現機制
                     var enemy_all_dead = true
                     for i in 0..<enemys.count{
                         if !enemys[i].isDead{
@@ -149,11 +266,11 @@ struct GamingView: View {
                             enemys = []
                             level += 1
                             
-                            let enemyCountInLevel = [1, 2, 2, 3, 3]
+                            let enemyCountInLevel = [1, 2, 2, 3, 3, 3, 3, 3, 3, 3]
                             var pastPosition: [Double] = []
                             
-                            if level >= 6{
-                                level = 5
+                            if level > 10{
+                                level = 10
                             }
                             
                             for _ in 0..<enemyCountInLevel[level-1]{
@@ -192,7 +309,7 @@ struct GamingView: View {
                                 pull = true
                                 arrows.append(Arrow(offsetX: -250, offsetY: 100))
                                 lasttimeGetArrow = 0
-                                if arrows.count > 20{
+                                if arrows.count > 30{
                                     arrows.removeFirst()
                                 }
                             }
@@ -237,8 +354,10 @@ struct GamingView: View {
 }
 
 struct GamingView_Previews: PreviewProvider {
+    @State static var page: String = "GamingView"
+    
     static var previews: some View {
-        GamingView()
+        GamingView(page: $page)
             .previewInterfaceOrientation(.landscapeRight)
     }
 }

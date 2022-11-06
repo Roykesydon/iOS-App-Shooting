@@ -13,6 +13,12 @@ struct Enemy: Identifiable{
     var offsetY: Double
     var isDead = false
     
+    var eyeCount: Int = 0
+    var eyeWidth: Double = 3.0
+    var eyeHeight: Double = 17.0
+    var eyeDelayCount: Int = 0
+    var eyeDelay: Int = Int.random(in: 140...140*4)
+    
     func beingHitted(targetX: Double, targetY: Double, myX: Double, myY: Double) -> Bool{
         let diffX = targetX - myX
         let diffY = targetY - myY
@@ -27,11 +33,14 @@ struct Enemy: Identifiable{
 
 struct EnemyView: View {
     @Binding var enemy: Enemy
+    @Binding var pausing: Bool
     @State private var timer: Timer?
     @State var floatOffsetCount: Int = 0
     @State var floatOffsetUp: Bool = true
     @State var opacity = 1.0
     @State var deadCount: Int = 0
+    
+    
     
     var body: some View {
         ZStack{
@@ -39,39 +48,42 @@ struct EnemyView: View {
             ZStack{
                 if !enemy.isDead{
                     RoundedRectangle(cornerRadius: 5)
-                        .frame(width: 3, height: 17)
+                        .frame(width: enemy.eyeWidth, height: enemy.eyeHeight)
                         .foregroundColor(Color("MyPink"))
                         .offset(x: -10, y: -5)
                     RoundedRectangle(cornerRadius: 5)
-                        .frame(width: 3, height: 17)
+                        .frame(width: enemy.eyeWidth, height: enemy.eyeHeight)
                         .foregroundColor(Color("MyPink"))
                         .offset(x: 5, y: -5)
                 }
                 else if enemy.isDead{
-                    RoundedRectangle(cornerRadius: 5)
-                        .frame(width: 3, height: 17)
-                        .foregroundColor(Color("MyPink"))
-                        .rotationEffect(.degrees(45), anchor: .center)
-                        .offset(x: -10, y: -5)
-                    
-                    RoundedRectangle(cornerRadius: 5)
-                        .frame(width: 3, height: 17)
-                        .foregroundColor(Color("MyPink"))
-                        .rotationEffect(.degrees(-45), anchor: .center)
-                        .offset(x: -10, y: -5)
-                    
-                    
-                    RoundedRectangle(cornerRadius: 5)
-                        .frame(width: 3, height: 17)
-                        .foregroundColor(Color("MyPink"))
-                        .rotationEffect(.degrees(45), anchor: .center)
-                        .offset(x: 5, y: -5)
-                    
-                    RoundedRectangle(cornerRadius: 5)
-                        .frame(width: 3, height: 17)
-                        .foregroundColor(Color("MyPink"))
-                        .rotationEffect(.degrees(-45), anchor: .center)
-                        .offset(x: 5, y: -5)
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 5)
+                            .frame(width: 3, height: 17)
+                            .foregroundColor(Color("MyPink"))
+                            .rotationEffect(.degrees(45), anchor: .center)
+                            .offset(x: -10, y: -5)
+                        
+                        RoundedRectangle(cornerRadius: 5)
+                            .frame(width: 3, height: 17)
+                            .foregroundColor(Color("MyPink"))
+                            .rotationEffect(.degrees(-45), anchor: .center)
+                            .offset(x: -10, y: -5)
+                        
+                        
+                        RoundedRectangle(cornerRadius: 5)
+                            .frame(width: 3, height: 17)
+                            .foregroundColor(Color("MyPink"))
+                            .rotationEffect(.degrees(45), anchor: .center)
+                            .offset(x: 5, y: -5)
+                        
+                        RoundedRectangle(cornerRadius: 5)
+                            .frame(width: 3, height: 17)
+                            .foregroundColor(Color("MyPink"))
+                            .rotationEffect(.degrees(-45), anchor: .center)
+                            .offset(x: 5, y: -5)
+                    }
+                    .compositingGroup()
                     
                 }
                 Circle()
@@ -89,6 +101,10 @@ struct EnemyView: View {
             
             
             func update(){
+                if pausing{
+                    return
+                }
+                
                 // 漂浮機制
                 floatOffsetCount += 1
                 if floatOffsetCount == 160{
@@ -101,6 +117,33 @@ struct EnemyView: View {
                     }
                     else{
                         enemy.offsetY += 1/20
+                    }
+                }
+                
+                enemy.eyeDelayCount += 1
+                // 眨眼
+                if enemy.eyeDelayCount >= enemy.eyeDelay{
+                    enemy.eyeCount += 1
+                    
+                    if enemy.eyeCount >= 140{
+                        // 閉眼中
+                        if enemy.eyeCount < 140+20{
+                            enemy.eyeHeight -= (17.0-3.0)/20
+                        }
+                        
+                        // 睜眼中
+                        else if enemy.eyeCount < 140+20+20{
+                            enemy.eyeHeight += (17.0-3.0)/20
+                        }
+                        
+                        // 結束
+                        else{
+                            enemy.eyeHeight = 17
+                            enemy.eyeWidth = 3
+                            enemy.eyeCount = 0
+                            enemy.eyeDelay = Int.random(in: 140...140*4)
+                            enemy.eyeDelayCount = 0
+                        }
                     }
                 }
                 
@@ -122,8 +165,9 @@ struct EnemyView: View {
 
 struct EnemyView_Previews: PreviewProvider {
     @State static var enemy = Enemy(offsetX: 0, offsetY: 0)
+    @State static var pausing = false
     
     static var previews: some View {
-        EnemyView(enemy: $enemy)
+        EnemyView(enemy: $enemy, pausing: $pausing)
     }
 }
