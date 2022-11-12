@@ -34,6 +34,7 @@ struct Enemy: Identifiable{
 struct EnemyView: View {
     @Binding var enemy: Enemy
     @Binding var pausing: Bool
+    @Binding var enemyColor: Color
     @State private var timer: Timer?
     @State var floatOffsetCount: Int = 0
     @State var floatOffsetUp: Bool = true
@@ -49,37 +50,37 @@ struct EnemyView: View {
                 if !enemy.isDead{
                     RoundedRectangle(cornerRadius: 5)
                         .frame(width: enemy.eyeWidth, height: enemy.eyeHeight)
-                        .foregroundColor(Color("MyPink"))
+                        .foregroundColor(enemyColor)
                         .offset(x: -10, y: -5)
                     RoundedRectangle(cornerRadius: 5)
                         .frame(width: enemy.eyeWidth, height: enemy.eyeHeight)
-                        .foregroundColor(Color("MyPink"))
+                        .foregroundColor(enemyColor)
                         .offset(x: 5, y: -5)
                 }
                 else if enemy.isDead{
                     ZStack{
                         RoundedRectangle(cornerRadius: 5)
                             .frame(width: 3, height: 17)
-                            .foregroundColor(Color("MyPink"))
+                            .foregroundColor(enemyColor)
                             .rotationEffect(.degrees(45), anchor: .center)
                             .offset(x: -10, y: -5)
                         
                         RoundedRectangle(cornerRadius: 5)
                             .frame(width: 3, height: 17)
-                            .foregroundColor(Color("MyPink"))
+                            .foregroundColor(enemyColor)
                             .rotationEffect(.degrees(-45), anchor: .center)
                             .offset(x: -10, y: -5)
                         
                         
                         RoundedRectangle(cornerRadius: 5)
                             .frame(width: 3, height: 17)
-                            .foregroundColor(Color("MyPink"))
+                            .foregroundColor(enemyColor)
                             .rotationEffect(.degrees(45), anchor: .center)
                             .offset(x: 5, y: -5)
                         
                         RoundedRectangle(cornerRadius: 5)
                             .frame(width: 3, height: 17)
-                            .foregroundColor(Color("MyPink"))
+                            .foregroundColor(enemyColor)
                             .rotationEffect(.degrees(-45), anchor: .center)
                             .offset(x: 5, y: -5)
                     }
@@ -87,7 +88,7 @@ struct EnemyView: View {
                     
                 }
                 Circle()
-                    .stroke(Color("MyPink"), style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
+                    .stroke(enemyColor, style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
                     .frame(width: 50, height: 50)
                     .offset(x: 0, y: 0)
             }.opacity(opacity)
@@ -166,8 +167,9 @@ struct EnemyView: View {
 struct EnemyView_Previews: PreviewProvider {
     @State static var enemy = Enemy(offsetX: 0, offsetY: 0)
     @State static var pausing = false
+    @State static var enemyColor = Color("MyPink")
     
     static var previews: some View {
-        EnemyView(enemy: $enemy, pausing: $pausing)
+        EnemyView(enemy: $enemy, pausing: $pausing, enemyColor: $enemyColor)
     }
 }

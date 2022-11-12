@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct GamingView: View {
+    // 遊戲結束
+    @State var showEnd = false
+    
     // 暫停
     @State var pausing = false
     @State var pausingTime: Int = 0
@@ -17,6 +20,8 @@ struct GamingView: View {
     @Binding var page: String
     @State var quitAlert: Bool = false
     @State var showSetting: Bool = false
+    
+    @Binding var records: [Record]
     
     // 射箭
     @State var arrows: [Arrow] = [Arrow(offsetX: -250, offsetY: 100)]
@@ -31,6 +36,7 @@ struct GamingView: View {
     // 敵人
     @State var enemys: [Enemy] = []
     @State var enemyDeadCount = 210
+    @State var enemyColor = Color("MyPink")
     
     // 計時
     @State var startTime: Int = 0
@@ -70,7 +76,7 @@ struct GamingView: View {
                                 Spacer()
                                 
                             }
-                                
+                            
                             ForEach($arrows){
                                 $arrow in
                                 ArrowView(arrow: $arrow)
@@ -81,7 +87,7 @@ struct GamingView: View {
                                 .offset(x: -250, y: 100)
                             ForEach($enemys){
                                 $enemy in
-                                EnemyView(enemy: $enemy, pausing: $pausing)
+                                EnemyView(enemy: $enemy, pausing: $pausing, enemyColor: $enemyColor)
                                     .offset(x: enemy.offsetX, y: enemy.offsetY)
                             }
                         }
@@ -142,6 +148,7 @@ struct GamingView: View {
                     }
                     
                     Button {
+                        pausing = true
                         showSetting = true
                     } label: {
                         HStack{
@@ -159,7 +166,7 @@ struct GamingView: View {
                     }
                     .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
                     .sheet(isPresented: $showSetting) {
-                        SettingView()
+                        SettingView(showSetting: $showSetting, enemyColor: $enemyColor)
                     }
                     
                     Button {
@@ -175,19 +182,42 @@ struct GamingView: View {
                         .padding(8)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(.purple, lineWidth: 2)
+                                .stroke(.red, lineWidth: 2)
                         )
                     }
                     .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
                     .alert("確定要離開嗎", isPresented: $quitAlert, actions: {
-                       Button("取消", role: .cancel) {
-                       }
-                       Button("離開", role: .destructive) {
-                           page = "HomeView"
-                       }
+                        Button("取消", role: .cancel) {
+                        }
+                        Button("離開", role: .destructive) {
+                            page = "HomeView"
+                        }
                     }, message: {
-//                        Text("真心不騙")
                     })
+                    .fullScreenCover(isPresented: $showEnd) {
+                        EndView(page: $page, records: $records, showEnd: $showEnd, shootCount: shootCount, curTimeString: curTimeString)
+                    }
+                    
+                        
+                    //                    Button {
+                    //                        showEnd = true
+                    //                        pausing = true
+                    //                    } label: {
+                    //                        HStack{
+                    //                            Text("勝利")
+                    //                                .foregroundColor(.white)
+                    //                            Image(systemName: "door.left.hand.open")
+                    //                                .foregroundColor(.white)
+                    //                        }
+                    //                        .frame(maxWidth: .infinity)
+                    //                        .padding(8)
+                    //                        .overlay(
+                    //                            RoundedRectangle(cornerRadius: 10)
+                    //                                .stroke(.purple, lineWidth: 2)
+                    //                        )
+                    //                    }
+                    //                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
+                    
                     
                     Spacer()
                     
@@ -269,7 +299,9 @@ struct GamingView: View {
                             let enemyCountInLevel = [1, 2, 2, 3, 3, 3, 3, 3, 3, 3]
                             var pastPosition: [Double] = []
                             
-                            if level > 10{
+                            if level > 1{
+                                showEnd = true
+                                pausing = true
                                 level = 10
                             }
                             
@@ -349,15 +381,17 @@ struct GamingView: View {
             .onDisappear(){
                 self.timer?.invalidate()
             }
+            
         })
     }
 }
 
 struct GamingView_Previews: PreviewProvider {
     @State static var page: String = "GamingView"
+    @State static var records: [Record] = []
     
     static var previews: some View {
-        GamingView(page: $page)
+        GamingView(page: $page, records: $records)
             .previewInterfaceOrientation(.landscapeRight)
     }
 }

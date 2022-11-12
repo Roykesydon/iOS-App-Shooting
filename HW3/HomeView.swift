@@ -23,19 +23,38 @@ struct HomeView: View {
             
             Spacer()
             
-            Button {
-                page = "GamingView"
-            } label: {
-                Text("開始遊戲")
-                    .frame(width: 100)
-                    .foregroundColor(.purple)
-                    .padding(8)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(.purple, lineWidth: 2)
-                    )
-                    .padding(10)
-            }.offset(y: -50)
+            HStack{
+                Button {
+                    page = "GamingView"
+                } label: {
+                    Text("開始遊戲")
+                        .frame(width: 100)
+                        .foregroundColor(.purple)
+                        .padding(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(.purple, lineWidth: 2)
+                        )
+                        .padding(10)
+                }.offset(y: -50)
+                
+                Spacer()
+                
+                Button {
+                    page = "RankView"
+                } label: {
+                    Text("紀錄")
+                        .frame(width: 100)
+                        .foregroundColor(.purple)
+                        .padding(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(.purple, lineWidth: 2)
+                        )
+                        .padding(10)
+                }.offset(y: -50)
+            }
+            .frame(width: 400)
             
 //            Spacer()
             

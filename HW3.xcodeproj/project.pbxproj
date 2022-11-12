@@ -17,6 +17,9 @@
 		709D79E22916812A0009545C /* EnemyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79E12916812A0009545C /* EnemyView.swift */; };
 		709D79E4291787DF0009545C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79E3291787DF0009545C /* HomeView.swift */; };
 		709D79E6291795740009545C /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79E5291795740009545C /* SettingView.swift */; };
+		709D79EA2918F50A0009545C /* EndView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79E92918F50A0009545C /* EndView.swift */; };
+		709D79EC29190AB30009545C /* RecordFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79EB29190AB30009545C /* RecordFormView.swift */; };
+		709D79EE2920132A0009545C /* RankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709D79ED2920132A0009545C /* RankView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +34,9 @@
 		709D79E12916812A0009545C /* EnemyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyView.swift; sourceTree = "<group>"; };
 		709D79E3291787DF0009545C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		709D79E5291795740009545C /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		709D79E92918F50A0009545C /* EndView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndView.swift; sourceTree = "<group>"; };
+		709D79EB29190AB30009545C /* RecordFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordFormView.swift; sourceTree = "<group>"; };
+		709D79ED2920132A0009545C /* RankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +72,11 @@
 				709D79C82914FA210009545C /* HW3App.swift */,
 				709D79E3291787DF0009545C /* HomeView.swift */,
 				709D79CA2914FA210009545C /* ContentView.swift */,
+				709D79ED2920132A0009545C /* RankView.swift */,
 				709D79D62914FCF10009545C /* GamingView.swift */,
 				709D79E5291795740009545C /* SettingView.swift */,
+				709D79E92918F50A0009545C /* EndView.swift */,
+				709D79EB29190AB30009545C /* RecordFormView.swift */,
 				709D79E12916812A0009545C /* EnemyView.swift */,
 				709D79DF2916537D0009545C /* BowView.swift */,
 				709D79DD291500CF0009545C /* ArrowView.swift */,
@@ -158,10 +167,13 @@
 				709D79DE291500CF0009545C /* ArrowView.swift in Sources */,
 				709D79E4291787DF0009545C /* HomeView.swift in Sources */,
 				709D79CB2914FA210009545C /* ContentView.swift in Sources */,
+				709D79EA2918F50A0009545C /* EndView.swift in Sources */,
 				709D79D72914FCF10009545C /* GamingView.swift in Sources */,
+				709D79EC29190AB30009545C /* RecordFormView.swift in Sources */,
 				709D79E02916537D0009545C /* BowView.swift in Sources */,
 				709D79E6291795740009545C /* SettingView.swift in Sources */,
 				709D79C92914FA210009545C /* HW3App.swift in Sources */,
+				709D79EE2920132A0009545C /* RankView.swift in Sources */,
 				709D79E22916812A0009545C /* EnemyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

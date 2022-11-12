@@ -10,12 +10,22 @@ import SwiftUI
 struct ContentView: View {
     @State var page: String = "HomeView"
     
+    @State var pull = false
+    @State var degree: Double = 45
+    @State var records: [Record] = []
+    
+    
     var body: some View {
         if page == "HomeView"{
             HomeView(page: $page)
         }
+        
         else if page == "GamingView"{
-            GamingView(page: $page)
+            GamingView(page: $page, records: $records)
+        }
+        
+        else if page == "RankView"{
+            RankView(page: $page, records: $records)
         }
     }
 }
