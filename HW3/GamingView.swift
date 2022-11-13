@@ -299,7 +299,7 @@ struct GamingView: View {
                             let enemyCountInLevel = [1, 2, 2, 3, 3, 3, 3, 3, 3, 3]
                             var pastPosition: [Double] = []
                             
-                            if level > 1{
+                            if level > 10{
                                 showEnd = true
                                 pausing = true
                                 level = 10
